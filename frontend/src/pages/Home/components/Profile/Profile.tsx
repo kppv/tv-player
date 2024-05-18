@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {User} from "../../../../shared/models/User.model";
 import './Profile.css'
 import Login from "../../../../shared/components/Login/Login";
+import {Avatar, Box, Typography} from "@mui/joy";
+import {Stack} from "@mui/material";
 
 
 function Profile({onAuth}: { onAuth: (success: boolean) => void }) {
@@ -21,7 +23,10 @@ function Profile({onAuth}: { onAuth: (success: boolean) => void }) {
                 }
                 return response.json();
             })
-            .then((user: User) => setUser(user))
+            .then((user: User) => {
+                onAuth(true)
+                setUser(user)
+            })
     }
 
 
@@ -40,15 +45,25 @@ function Profile({onAuth}: { onAuth: (success: boolean) => void }) {
     if (user) {
         const avatar = `https://avatars.yandex.net/get-yapic/${user.defaultAvatarId}/islands-200`
         return (
-            <div className="profile">
-                <img src={avatar} className="avatar"/>
-                <h1>Привет, {user.firstName}!</h1>
-            </div>
+            <Stack
+                direction="column"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Box sx={{marginTop: '16px'}}>
+                    <Avatar src={avatar} size="lg"/>
+                </Box>
+                <Typography color="neutral" level="h2" variant="plain">
+                    Привет, {user.firstName}!
+                </Typography>
+            </Stack>
         );
     }
     return (
         <div className="profile">
-            <h1>Привет!</h1>
+            <Typography color="neutral" level="h2" variant="plain">
+                Привет!
+            </Typography>
             {login}
         </div>
     )

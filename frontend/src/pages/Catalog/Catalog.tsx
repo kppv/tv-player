@@ -1,4 +1,4 @@
-import {Card, IconButton, Stack, Typography} from "@mui/joy";
+import {Card, Chip, IconButton, Stack, Typography} from "@mui/joy";
 import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import "./Catalog.css"
@@ -36,9 +36,8 @@ function Catalog() {
     })
 
     let s: string | undefined = location.pathname.split("/").pop()
-
-    let title = ""
-    if (s != null) {
+    let title = "Каталог"
+    if (s) {
         title = decodeURIComponent(s)
     }
 
@@ -62,7 +61,7 @@ function Catalog() {
                     </IconButton>
                 </Stack>
 
-                <Typography level="title-md">{title}</Typography>
+                <Chip>{title}</Chip>
                 {catalog}
             </Stack>
         </>
