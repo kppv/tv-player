@@ -18,9 +18,9 @@ function init(callback) {
             {
                 client_id: "828b96e3c94540bd88aef752b4ca605b",
                 response_type: "token",
-                redirect_uri: "https://61ce-91-77-161-229.ngrok-free.app/token.html"
+                redirect_uri: "https://1a2e-91-77-161-229.ngrok-free.app/token.html"
             },
-            "https://61ce-91-77-161-229.ngrok-free.app",
+            "https://1a2e-91-77-161-229.ngrok-free.app",
             {view: "default"}
         )
             .then(({handler}) => {

@@ -4,7 +4,7 @@ import './Profile.css'
 import Login from "../../../../shared/components/Login/Login";
 
 
-function Profile() {
+function Profile({onAuth}: { onAuth: (success: boolean) => void }) {
 
     const [user, setUser] = useState<User | null>(null);
     let [needLogin, setNeedLogin] = useState(false);
@@ -27,6 +27,7 @@ function Profile() {
 
     function onLogin(user: User) {
         setUser(user)
+        onAuth(true)
     }
 
     useEffect(() => {

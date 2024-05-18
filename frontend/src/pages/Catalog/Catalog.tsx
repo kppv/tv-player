@@ -1,6 +1,8 @@
+import {Card, IconButton, Stack, Typography} from "@mui/joy";
 import React, {useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import "./Catalog.css"
+import {ArrowBack, Home} from "@mui/icons-material";
 
 interface Item {
     name: string
@@ -9,29 +11,61 @@ interface Item {
 }
 
 function Catalog() {
-
     const location = useLocation();
+    const navigate = useNavigate();
     const [items, setItems] = useState<Item[]>([]);
 
     useEffect(() => {
         fetch(`/api/catalog/list?path=${location.pathname}`)
             .then(response => {
-                return response.json();
+                if (response.status === 200) {
+                    return response.json();
+                }
+                return [];
             })
             .then((items: Item[]) => setItems(items))
     }, [location]);
 
-
     let catalog = items.map((item: Item) => {
-        return <div className="card" key={item.name}>
-            <Link to={item.path}>{item.name}</Link>
-        </div>
+        return <Card variant="soft" sx={{width: 300}} onClick={() => navigate(item.path)} key={item.name}>
+            <div>
+                <Typography level="title-md">{item.name}</Typography>
+                <Typography level="body-sm">Description of the card.</Typography>
+            </div>
+        </Card>
     })
 
+    let s: string | undefined = location.pathname.split("/").pop()
+
+    let title = ""
+    if (s != null) {
+        title = decodeURIComponent(s)
+    }
+
     return (
-        <div className="catalog">
-            {catalog}
-        </div>
+        <>
+            <Stack spacing={2}
+                   direction="column"
+                   justifyContent="center"
+                   alignItems="center">
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={2}
+                >
+                    <IconButton>
+                        <ArrowBack onClick={() => navigate(-1)}/>
+                    </IconButton>
+                    <IconButton>
+                        <Home onClick={() => navigate("/")}/>
+                    </IconButton>
+                </Stack>
+
+                <Typography level="title-md">{title}</Typography>
+                {catalog}
+            </Stack>
+        </>
     )
 }
 

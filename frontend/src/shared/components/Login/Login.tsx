@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import init from "../../js/ya";
+import init from "./ya";
 import {User} from "../../models/User.model";
 
 function Login({onLogin}: { onLogin: (user: User) => void }) {
