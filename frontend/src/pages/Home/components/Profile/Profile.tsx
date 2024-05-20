@@ -21,10 +21,10 @@ function Profile({onAuth}: { onAuth: (success: boolean) => void }) {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+                onAuth(true)
                 return response.json();
             })
             .then((user: User) => {
-                onAuth(true)
                 setUser(user)
             })
     }

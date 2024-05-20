@@ -11,7 +11,6 @@ async def get(path: str):
     directory_path = f"{base_directory_path}{path}"
     file_list = []
 
-    # Перебираем файлы и директории в директории
     for item in os.listdir(directory_path):
         if item.startswith("."):
             continue

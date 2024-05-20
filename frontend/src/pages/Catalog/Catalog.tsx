@@ -35,11 +35,20 @@ function Catalog() {
         </Card>
     })
 
-    let s: string | undefined = location.pathname.split("/").pop()
-    let title = "Каталог"
-    if (s) {
-        title = decodeURIComponent(s)
+    let paths = generatePathArray(location.pathname)
+
+    let breadcrumbs = [<Chip key="catalog" onClick={() => navigate("/")}>Каталог</Chip>]
+
+    if (paths) {
+        paths
+            .filter((path) => path !== "")
+            .forEach((path => breadcrumbs.push(
+                <Chip key={path} onClick={() => navigate(path)}>
+                    {decodeURIComponent(path.split("/").pop() as string)}
+                </Chip>
+            )))
     }
+
 
     return (
         <>
@@ -61,11 +70,37 @@ function Catalog() {
                     </IconButton>
                 </Stack>
 
-                <Chip>{title}</Chip>
+                <Stack
+                    direction="row"
+                    justifyContent="center"
+                    alignItems="center"
+                    sx={{flexWrap: 'wrap', gap: 1}}
+                >
+                    {breadcrumbs}
+                </Stack>
                 {catalog}
             </Stack>
         </>
     )
+}
+
+function generatePathArray(path: string): string[] {
+    // Убираем начальный слэш и делим путь по символу '/'
+    const parts = path.split('/').filter(part => part !== '');
+
+    // Инициализация массива для результатов
+    const result: string[] = [];
+
+    // Переменная для накопления пути
+    let currentPath = '';
+
+    // Проходимся по всем частям пути и накапливаем их
+    for (const part of parts) {
+        currentPath += `/${part}`;
+        result.push(currentPath);
+    }
+
+    return result;
 }
 
 export default Catalog;
