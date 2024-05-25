@@ -1,19 +1,16 @@
-import {Card, Chip, IconButton, Stack, Typography} from "@mui/joy";
+import {IconButton, Stack} from "@mui/joy";
 import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import "./Catalog.css"
 import {ArrowBack, Home} from "@mui/icons-material";
+import {CatalogItem} from "./Catalog.model";
+import CatalogCard from "./components/CatalogCard/CatalogCard";
+import Breadcrumbs from "./components/Breadcrumbs/Breadcrumbs";
 
-interface Item {
-    name: string
-    is_file: boolean,
-    path: string
-}
 
 function Catalog() {
     const location = useLocation();
     const navigate = useNavigate();
-    const [items, setItems] = useState<Item[]>([]);
+    const [items, setItems] = useState<CatalogItem[]>([]);
 
     useEffect(() => {
         fetch(`/api/catalog/list?path=${location.pathname}`)
@@ -23,32 +20,12 @@ function Catalog() {
                 }
                 return [];
             })
-            .then((items: Item[]) => setItems(items))
+            .then((items: CatalogItem[]) => setItems(items))
     }, [location]);
 
-    let catalog = items.map((item: Item) => {
-        return <Card variant="soft" sx={{width: 300}} onClick={() => navigate(item.path)} key={item.name}>
-            <div>
-                <Typography level="title-md">{item.name}</Typography>
-                <Typography level="body-sm">Description of the card.</Typography>
-            </div>
-        </Card>
+    let catalog = items.map((item: CatalogItem) => {
+        return <CatalogCard item={item} key={item.path}/>
     })
-
-    let paths = generatePathArray(location.pathname)
-
-    let breadcrumbs = [<Chip key="catalog" onClick={() => navigate("/")}>Каталог</Chip>]
-
-    if (paths) {
-        paths
-            .filter((path) => path !== "")
-            .forEach((path => breadcrumbs.push(
-                <Chip key={path} onClick={() => navigate(path)}>
-                    {decodeURIComponent(path.split("/").pop() as string)}
-                </Chip>
-            )))
-    }
-
 
     return (
         <>
@@ -76,31 +53,12 @@ function Catalog() {
                     alignItems="center"
                     sx={{flexWrap: 'wrap', gap: 1}}
                 >
-                    {breadcrumbs}
+                    <Breadcrumbs/>
                 </Stack>
                 {catalog}
             </Stack>
         </>
     )
-}
-
-function generatePathArray(path: string): string[] {
-    // Убираем начальный слэш и делим путь по символу '/'
-    const parts = path.split('/').filter(part => part !== '');
-
-    // Инициализация массива для результатов
-    const result: string[] = [];
-
-    // Переменная для накопления пути
-    let currentPath = '';
-
-    // Проходимся по всем частям пути и накапливаем их
-    for (const part of parts) {
-        currentPath += `/${part}`;
-        result.push(currentPath);
-    }
-
-    return result;
 }
 
 export default Catalog;
