@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home";
 import Catalog from "./pages/Catalog/Catalog";
 import "./App.css"
 import {CssVarsProvider} from "@mui/joy";
+import Controller from "./pages/Controller/Controller";
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
                 <Routes>
                     <Route path="*" element={<Home/>}>
                         <Route path="*" element={<Catalog/>}/>
+                        <Route path="controller/*" element={<Controller/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -12,7 +12,7 @@ function CatalogCard({item}: { item: CatalogItem }) {
             <div>
                 <Typography level="title-md">{item.name}</Typography>
             </div>
-            <Button component="a" href="#as-link" startDecorator={<PlayArrow/>}>
+            <Button component="a" onClick={() => navigate(`controller${item.path}`)} startDecorator={<PlayArrow/>}>
                 Воспроизвести
             </Button>
         </Card>

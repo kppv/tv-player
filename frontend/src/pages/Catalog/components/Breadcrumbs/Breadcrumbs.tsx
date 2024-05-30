@@ -7,6 +7,7 @@ function Breadcrumbs() {
     const navigate = useNavigate();
 
     let paths = generatePathArray(location.pathname)
+
     let breadcrumbs = [<Chip key="catalog" onClick={() => navigate("/")}>Каталог</Chip>]
     if (paths) {
         paths
@@ -22,6 +23,7 @@ function Breadcrumbs() {
 }
 
 function generatePathArray(path: string): string[] {
+    path = path.replace("controller", "")
     // Убираем начальный слэш и делим путь по символу '/'
     const parts = path.split('/').filter(part => part !== '');
 
