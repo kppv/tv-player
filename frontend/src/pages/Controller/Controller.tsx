@@ -3,6 +3,7 @@ import {ReactElement, useEffect, useRef, useState} from "react";
 import {IconButton, Stack} from "@mui/joy";
 import {Forward10Rounded, FullscreenRounded, PlayArrowRounded, Replay10Rounded, StopRounded} from "@mui/icons-material";
 
+// TODO навести порядок, вынести компоненты
 
 enum CommandName {
     PLAY = "play",

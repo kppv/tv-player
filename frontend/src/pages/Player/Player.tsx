@@ -2,6 +2,8 @@ import {Button, Stack} from "@mui/joy";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {PlayArrowRounded} from "@mui/icons-material";
 
+// TODO навести порядок
+
 function Player() {
 
     const VIDEO_PATH = "https://pl.kppv.tech/video"
