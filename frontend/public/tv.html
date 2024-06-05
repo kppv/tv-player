@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<button id="startButton" style="font-size: 18px;">Начать</button>
+<div id="playerContainer" class="hidden">
+    <div id="videoTitle" style="color: white;"></div>
+    <video id="videoPlayer" controls width="640"></video>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const VIDEO_PATH = "https://pl.kppv.tech/video";
+        let started = false;
+        let data = "";
+        let title = "";
+        let src = "";
+        let connected = false;
+        let ws = null;
+        const vidRef = document.getElementById('videoPlayer');
+        const startButton = document.getElementById('startButton');
+        const playerContainer = document.getElementById('playerContainer');
+        const videoTitle = document.getElementById('videoTitle');
+
+        startButton.addEventListener('click', () => {
+            started = true;
+            startButton.classList.add('hidden');
+            playerContainer.classList.remove('hidden');
+        });
+
+        function gettingData() {
+            if (!ws) return;
+            ws.onmessage = (e) => {
+                data = e.data;
+                const parsedData = JSON.parse(e.data);
+                let src = parsedData.params.path;
+                if (src) {
+                    title = decodeURIComponent(src.split("/").pop());
+                    videoTitle.textContent = title;
+                }
+                playerAction(parsedData.name, VIDEO_PATH + src);
+            };
+        }
+
+        function playerAction(action, src = "") {
+            if (vidRef) {
+                if (action === "play") {
+                    if (vidRef.src !== src) {
+                        vidRef.src = src;
+                    }
+                    vidRef.play();
+                }
+                if (action === "stop") {
+                    vidRef.pause();
+                }
+                if (action === "fullscreen") {
+                    vidRef.requestFullscreen();
+                }
+                if (action === "forward") {
+                    vidRef.currentTime += 10;
+                }
+                if (action === "replay") {
+                    vidRef.currentTime -= 10;
+                }
+            }
+        }
+
+        ws = new WebSocket("/sock/control/command");
+        ws.onopen = () => connected = true;
+        ws.onclose = () => connected = false;
+        gettingData();
+    });
+</script>
+</body>
+</html>
