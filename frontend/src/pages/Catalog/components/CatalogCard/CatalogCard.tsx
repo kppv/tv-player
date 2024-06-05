@@ -10,7 +10,7 @@ function CatalogCard({item}: { item: CatalogItem }) {
     if (item.is_file) {
         return <Card variant="soft" sx={{width: 300}} key={item.name}>
             <div>
-                <Typography level="title-md">{item.name}</Typography>
+                <Typography level="title-md" sx={{wordBreak: "break-all"}}>{item.name}</Typography>
             </div>
             <Button component="a" onClick={() => navigate(`controller${item.path}`)} startDecorator={<PlayArrow/>}>
                 Воспроизвести
