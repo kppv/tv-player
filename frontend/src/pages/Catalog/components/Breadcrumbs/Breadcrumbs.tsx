@@ -13,7 +13,7 @@ function Breadcrumbs() {
         paths
             .filter((path) => path !== "")
             .forEach((path => breadcrumbs.push(
-                <Chip key={path} onClick={() => navigate(path)}>
+                <Chip key={path} onClick={() => navigate(path)} sx={{maxWidth: "200px"}}>
                     {decodeURIComponent(path.split("/").pop() as string)}
                 </Chip>
             )))

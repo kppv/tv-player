@@ -4,7 +4,7 @@ import {PlayArrowRounded} from "@mui/icons-material";
 
 function Player() {
 
-    const VIDEO_PATH = "https://pl.kppv.tech"
+    const VIDEO_PATH = "https://pl.kppv.tech/video"
     const [started, setStarted] = useState(false);
     const [data, setData] = useState("");
     const [title, setTitle] = useState("");
