@@ -12,7 +12,10 @@ async def get(path: str):
     directory_path = f"{base_directory_path}{path}"
     file_list = []
 
-    for item in os.listdir(directory_path):
+    listdir = os.listdir(directory_path)
+    listdir.sort()
+
+    for item in listdir:
         if item.startswith("."):
             continue
         full_path = os.path.join(directory_path, item)
@@ -23,5 +26,4 @@ async def get(path: str):
         }
         file_list.append(file_dto)
 
-    file_list.sort()
     return file_list
