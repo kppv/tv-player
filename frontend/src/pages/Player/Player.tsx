@@ -31,16 +31,18 @@ function Player() {
             let src = data?.params?.path;
             if (src) {
                 setTitle(decodeURIComponent(src.split("/").pop()))
-                setSrc(src)
             }
-            playerAction(data.name)
+            playerAction(data.name, VIDEO_PATH + src);
         };
     }, []);
 
-    function playerAction(action: string) {
-        if (vidRef && vidRef.current && started) {
+    function playerAction(action: string, src: string = "") {
+        if (vidRef && vidRef.current) {
             if (vidRef) {
                 if (action === "play") {
+                    if (vidRef.current.src !== src) {
+                        vidRef.current.src = src;
+                    }
                     vidRef.current?.play();
                 }
                 if (action === "stop") {
@@ -68,10 +70,7 @@ function Player() {
             <div style={{color: "white"}}>{title}</div>
             <video ref={vidRef}
                    controls
-                   width="640"
-                   preload="auto">
-                <source
-                    src={VIDEO_PATH + src}/>
+                   width="640">
             </video>
         </>
     }
