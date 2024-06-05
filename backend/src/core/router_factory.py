@@ -24,3 +24,12 @@ def api_router_factory(
         tags=[postfix.replace("_", "-")],
         dependencies=dependencies_,
     )
+
+
+def ws_router_factory(
+    postfix: str,
+    api_prefix: str = "/sock/",
+):
+    return APIRouter(
+        prefix=f"{api_prefix}{postfix}",
+    )

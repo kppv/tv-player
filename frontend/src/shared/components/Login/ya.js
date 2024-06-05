@@ -14,13 +14,13 @@ function deleteAllCookies() {
 function init(callback) {
     deleteAllCookies()
     setTimeout(() => {
-        YaAuthSuggest.init(
+        window.YaAuthSuggest.init(
             {
                 client_id: "828b96e3c94540bd88aef752b4ca605b",
                 response_type: "token",
-                redirect_uri: "https://1a2e-91-77-161-229.ngrok-free.app/token.html"
+                redirect_uri: "https://pl.kppv.tech/token.html"
             },
-            "https://1a2e-91-77-161-229.ngrok-free.app",
+            "https://pl.kppv.tech",
             {view: "default"}
         )
             .then(({handler}) => {
