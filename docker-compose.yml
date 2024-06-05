@@ -21,7 +21,7 @@ services:
       ]
     restart: unless-stopped
     ports:
-      - '8000:8000'
+      - '8100:8000'
 
   tv_frontend:
     container_name: tv_frontend
@@ -29,4 +29,4 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - '8090:8080'
+      - '8180:8080'
