@@ -23,4 +23,5 @@ async def get(path: str):
         }
         file_list.append(file_dto)
 
+    file_list.sort()
     return file_list
