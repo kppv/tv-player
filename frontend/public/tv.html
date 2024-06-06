@@ -5,80 +5,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Player</title>
     <style>
+        html, body {
+            height: 100%; /* Задаём высоту всей страницы */
+            margin: 0; /* Убираем отступы */
+            font-family: 'Courier New', Courier, monospace;
+            background: #22272e;
+            color: #96d0ff;
+            font-size: 16px;
+        }
+
         .hidden {
             display: none;
+        }
+
+        #videoTitle {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #startButton {
+            margin: 10px auto;
+            width: 200px;
+            text-align: center;
+            padding: 50px;
+            border: 5px solid #96d0ff;
+            font-weight: bold;
+            font-size: 32px;
+            background: rgba(150, 208, 255, 0.22);
+            border-radius: 10px;
+        }
+
+        #playerContainer {
+            margin: 5px auto;
+            width: 700px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<button id="startButton" style="font-size: 18px;">Начать</button>
+<h1 id="videoTitle"></h1>
+<div id="startButton" style="font-size: 18px;">Начать</div>
 <div id="playerContainer" class="hidden">
-    <div id="videoTitle" style="color: #ccc;"></div>
     <video id="videoPlayer" controls width="640"></video>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const VIDEO_PATH = "https://pl.kppv.tech/video";
-        let started = false;
-        let data = "";
-        let title = "";
-        let src = "";
-        let connected = false;
-        let ws = null;
-        const vidRef = document.getElementById('videoPlayer');
-        const startButton = document.getElementById('startButton');
-        const playerContainer = document.getElementById('playerContainer');
-        const videoTitle = document.getElementById('videoTitle');
+    const VIDEO_PATH = "https://pl.kppv.tech/video";
+    let started = false;
+    let data = "";
+    let title = "";
+    let src = "";
+    let connected = false;
+    let ws = null;
+    const vidRef = document.getElementById('videoPlayer');
+    const startButton = document.getElementById('startButton');
+    const playerContainer = document.getElementById('playerContainer');
+    const videoTitle = document.getElementById('videoTitle');
 
-        startButton.addEventListener('click', () => {
-            started = true;
-            startButton.classList.add('hidden');
-            playerContainer.classList.remove('hidden');
-        });
+    startButton.addEventListener('click', () => {
+        started = true;
+        startButton.classList.add('hidden');
+        playerContainer.classList.remove('hidden');
+    });
 
-        function gettingData() {
-            if (!ws) return;
-            ws.onmessage = (e) => {
-                data = e.data;
-                const parsedData = JSON.parse(e.data);
-                let src = parsedData.params.path;
-                if (src) {
-                    title = decodeURIComponent(src.split("/").pop());
-                    videoTitle.textContent = title;
-                }
-                playerAction(parsedData.name, VIDEO_PATH + src);
-            };
-        }
+    function gettingData() {
+        if (!ws) return;
+        ws.onmessage = function (e) {
+            data = e.data;
 
-        function playerAction(action, src = "") {
-            if (vidRef) {
-                if (action === "play") {
-                    if (vidRef.src !== src) {
-                        vidRef.src = src;
-                    }
-                    vidRef.play();
+            const parsedData = JSON.parse(e.data);
+
+            let src = "";
+            if (parsedData.params && parsedData.params.path) {
+                src = parsedData.params.path;
+                title = decodeURIComponent(src.split("/").pop());
+                videoTitle.textContent = title
+
+            }
+            playerAction(parsedData.name, VIDEO_PATH + src);
+        };
+    }
+
+    function playerAction(action, src = "") {
+        if (vidRef) {
+            if (action === "play") {
+                if (vidRef.src !== src) {
+                    vidRef.src = src;
                 }
-                if (action === "stop") {
-                    vidRef.pause();
-                }
-                if (action === "fullscreen") {
-                    vidRef.requestFullscreen();
-                }
-                if (action === "forward") {
-                    vidRef.currentTime += 10;
-                }
-                if (action === "replay") {
-                    vidRef.currentTime -= 10;
-                }
+                vidRef.play();
+            }
+            if (action === "stop") {
+                vidRef.pause();
+            }
+            if (action === "fullscreen") {
+                vidRef.requestFullscreen();
+            }
+            if (action === "forward") {
+                vidRef.currentTime += 10
+            }
+            if (action === "replay") {
+                vidRef.currentTime -= 10;
             }
         }
+    }
 
-        ws = new WebSocket("/sock/control/command");
-        ws.onopen = () => connected = true;
-        ws.onclose = () => connected = false;
-        gettingData();
-    });
+    ws = new WebSocket("wss://pl.kppv.tech/sock/control/command");
+    ws.onopen = function () {
+        connected = true;
+        videoTitle.textContent = "Connected";
+    };
+    ws.onclose = function () {
+        connected = false
+        videoTitle.textContent = "Disconnected";
+    };
+    gettingData();
 </script>
 </body>
 </html>
