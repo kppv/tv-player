@@ -30,11 +30,25 @@ function Controller() {
     const ws = useRef<WebSocket | null>(null);
 
     useEffect(() => {
-        ws.current = new WebSocket("/sock/control/command"); // создаем ws соединение
-        ws.current.onopen = () => setStatus(true);	// callback на ивент открытия соединения
-        ws.current.onclose = () => setStatus(false); // callback на ивент закрытия соединения
-        return () => ws.current?.close(); // кода меняется isPaused - соединение закрывается
-    }, [ws]);
+        const connect = () => {
+            ws.current = new WebSocket("/sock/control/command");
+            ws.current.onopen = () => {
+                setStatus(true);
+            };
+            ws.current.onclose = (event) => {
+                setStatus(false);
+                setTimeout(connect, 1000); // Attempt to reconnect after 1 second
+            };
+        };
+
+        connect();
+
+        return () => {
+            if (ws.current) {
+                ws.current.close(1000);
+            }
+        };
+    }, []);
 
 
     const commands = [
