@@ -3,7 +3,7 @@ version: "3.8"
 services:
   tv_backend:
     container_name: tv_backend
-    user: 1000:1000 # for linux to delete created files
+    user: 1000:1000 # for linux to delete created files--
     build:
       context: backend
       dockerfile: Dockerfile
@@ -30,4 +30,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - '8180:8080'
-      
+    
