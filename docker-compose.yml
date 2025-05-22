@@ -30,3 +30,4 @@ services:
       dockerfile: Dockerfile
     ports:
       - '8180:8080'
+      
